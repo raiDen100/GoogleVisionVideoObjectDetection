@@ -7,14 +7,13 @@ import threading
 import asyncio
 import time
 
-globalFrame = ""
+globalFrame = None
 location = None
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'ServiceAccountToken.json'
 client = vision.ImageAnnotatorClient()
 
 def localize_objects(img):
     global location
-
     global globalFrame
 
     success, encoded_image = cv2.imencode('.png', img)
