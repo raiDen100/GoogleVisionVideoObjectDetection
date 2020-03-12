@@ -7,14 +7,15 @@ import threading
 import asyncio
 import time
 
-gloabFrame = ""
+globalFrame = ""
 location = None
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'ServiceAccountToken.json'
 client = vision.ImageAnnotatorClient()
 
 def localize_objects(img):
     global location
-    global gloabFrame
+
+    global globalFrame
 
     success, encoded_image = cv2.imencode('.png', img)
     content2 = encoded_image.tobytes()
@@ -35,13 +36,13 @@ def localize_objects(img):
             objectsPosition.append([vertex.x, vertex.y])
 
     location = objectsPosition
-    threading.Timer(0.5, localize_objects, args=(gloabFrame,)).start()
+    threading.Timer(0.5, localize_objects, args=(globalFrame,)).start()
 
 
 
 def main():
     global location
-    global gloabFrame
+    global globalFrame
 
     started = False
     cap = cv2.VideoCapture("http://dl86.y2mate.com/?file=M3R4SUNiN3JsOHJ6WWQ2a3NQS1Y5ZGlxVlZIOCtyZ0hsOGMxeVJFMUNMbFp0Y1lLMmZDbE1kb0VDcUlaekptMkVNcGQrem1UWDlXY2V6K0J0NHNqQ1RiVzFKMFF0aTNCK29BbkV1TitVMTI5ek1Yb3V3SllxeVRLYU1MaU9iOVFXQzVpczNGY2duYkxuT0dhdEFXczlYdWtxMGk4ZkNVZXVtWk9iOVBKL29wY3dHdk9LcVhDM29CUjZIUzV1dDhiL09uUHVRRGl4dnc5dDlFK0V3OTNmSUpTMTV2ajF1TFp0bmdjam8wWnlGNmJyZWV3QjQwaEhiR1hkekJQTUNjZTF2L25YUWdiOENnUjZtSzMrS2dhNUc4TVRxMW01bUMzeHVUelNST2ZlUGV2Vm9HMUZibnQvcFhwclBSeDZ3ZkNxdXJDa281cHBsWDJHSkd4RjRoZS94cDI3L2JhbzhrdTBsK3IzeHNUaitWVWxSNmtJeHh2R3M0YmNERWNNWkVFRVgwPQ%3D%3D")
@@ -49,7 +50,7 @@ def main():
         ret, frame = cap.read()
         frame = cv2.resize(frame, (1920, 1080))
         if ret == True:
-            gloabFrame = frame
+            globalFrame = frame
         if location:
             for i in range(3, len(location), 4):
                 if i - 1 > len(location):
@@ -61,7 +62,7 @@ def main():
                 started = True
 
         if ret == True:
-            cv2.imshow('frame',frame)
+            cv2.imshow('Video',frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
